@@ -1,10 +1,9 @@
 pipeline {
     agent any
-    description 'Pipeline example'
     stages {
-        stage('Example') {
+        stage('Hello') {
             steps {
-                sh 'echo Hello World'
+                echo 'Hello World!'
             }
         }
     }
