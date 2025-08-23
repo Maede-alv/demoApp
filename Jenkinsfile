@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Use git without credentials if repository is public, or fix credential ID
-                git url: 'https://github.com/Maede-alv/demoApp.git', branch: 'main'
+                git url: 'https://github.com/Maede-alv/demoApp.git', branch: 'master'
             }
         }
         
