@@ -1,16 +1,31 @@
 pipeline {
     agent any
     
-    tools {
-        maven 'Maven 3.9.5'  // Make sure this tool name exists in Jenkins
-        jdk 'JDK 17'         // Make sure this tool name exists in Jenkins
+    environment {
+        // These will use whatever Maven/Java is available on the agent
+        MAVEN_HOME = tool 'maven3'  // Try this common name, or remove if not needed
+        JAVA_HOME = tool 'jdk17'    // Try this common name, or remove if not needed
     }
     
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master', 
-                url: 'https://github.com/Maede-alv/demoApp.git'
+                // Use git without credentials if repository is public, or fix credential ID
+                git url: 'https://github.com/Maede-alv/demoApp.git', branch: 'main'
+            }
+        }
+        
+        stage('Show Versions') {
+            steps {
+                sh '''
+                    echo "Java version:"
+                    java -version
+                    echo "Maven version:"
+                    mvn --version
+                    echo "Current directory:"
+                    pwd
+                    ls -la
+                '''
             }
         }
         
@@ -40,6 +55,7 @@ pipeline {
         stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                echo '📦 Artifact archived successfully!'
             }
         }
     }
@@ -50,9 +66,6 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed!'
-        }
-        always {
-            cleanWs()
         }
     }
 }
